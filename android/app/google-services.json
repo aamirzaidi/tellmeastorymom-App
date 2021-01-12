@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "451791648660",
+    "project_id": "tellmeastorymom-c17e3",
+    "storage_bucket": "tellmeastorymom-c17e3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:451791648660:android:d9fe221e9280c9b11c8181",
+        "android_client_info": {
+          "package_name": "com.tellmeastorymom.tellmeastorymom"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "451791648660-0f3si8mmli9k2sv5tvqstdr9tb6o9eia.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tellmeastorymom.tellmeastorymom",
+            "certificate_hash": "fd7bf8f1e5fd5f3fbd2a8d85cb73e58eb79010e6"
+          }
+        },
+        {
+          "client_id": "451791648660-eclsnokfjt2mbtrmq8gu0qfu56e95u1r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tellmeastorymom.tellmeastorymom",
+            "certificate_hash": "0fe9c13b512633612314632504fb8aa8d1072e5b"
+          }
+        },
+        {
+          "client_id": "451791648660-8i6qe7npf3dtul3hlvspj6h7imtuejj0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzsXySNCpKOpEqY-QveLwgKg7vO3DxnMc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "451791648660-8i6qe7npf3dtul3hlvspj6h7imtuejj0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

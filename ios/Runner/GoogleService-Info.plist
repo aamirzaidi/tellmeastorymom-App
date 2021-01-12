@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>644858878542-algrbdb1bk6kemgo2plvps39lb7qrgb4.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.644858878542-algrbdb1bk6kemgo2plvps39lb7qrgb4</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>644858878542-6ahgmrahkcsptolrkril7jh0qo44431b.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAvo6HepxIpEJxhrE37kiXpIQOsT0BYXRs</string>
+	<key>GCM_SENDER_ID</key>
+	<string>644858878542</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.tellmeastorymom</string>
+	<key>PROJECT_ID</key>
+	<string>tellmeastorymom-c02e1</string>
+	<key>STORAGE_BUCKET</key>
+	<string>tellmeastorymom-c02e1.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:644858878542:ios:9ec31fc243cca6799b811f</string>
+	<key>DATABASE_URL</key>
+	<string>https://tellmeastorymom-c02e1.firebaseio.com</string>
+</dict>
+</plist>

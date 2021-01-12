@@ -1,0 +1,104 @@
+name: tellmeastorymom
+description: A new Flutter project.
+
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
+
+# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+version: 1.2.0+3
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^0.1.3
+  tel_input: ^0.2.2
+  flutter_email_sender: ^4.0.0
+  flutter_icons: ^1.1.0
+  firebase_storage: ^5.2.0
+  expand_widget: ^1.0.0+2
+  firebase_analytics: ^6.0.0
+  cloud_firestore: ^0.14.0+1
+  firebase_core: ^0.5.0
+  flutter_tts:
+  shared_preferences: ^0.5.10
+  share: ^0.6.4+5
+  flutter_rating_bar: ^3.0.1+1
+  firebase_auth: ^0.18.0+1
+  google_sign_in: ^4.5.3
+  intl: ^0.16.1
+  flutter_advanced_networkimage: ^0.7.0
+  flutter_svg: 0.17.3
+  change_app_package_name: ^0.1.2
+  url_launcher:
+  zefyr: ^0.12.0
+  quill_delta: ^1.0.0
+  image_picker: ^0.6.7+15
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter.
+flutter:
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/images/
+  fonts:
+    - family: Poppins-Bold
+      fonts:
+        - asset: assets/fonts/Poppins-Bold.ttf
+    - family: Poppins-Light
+      fonts:
+        - asset: assets/fonts/Poppins-Light.ttf
+    - family: Poppins-Medium
+      fonts:
+        - asset: assets/fonts/Poppins-Medium.ttf
+    - family: Poppins-Regular
+      fonts:
+        - asset: assets/fonts/Poppins-Regular.ttf
+    - family: Poppins-SemiBold
+      fonts:
+        - asset: assets/fonts/Poppins-SemiBold.ttf
+    - family: Poppins-Thin
+      fonts:
+        - asset: assets/fonts/Poppins-Thin.ttf
+    - family: Oxygen-Regular
+      fonts:
+        - asset: assets/fonts/Oxygen-Regular.ttf
+    - family: Oxygen-Bold
+      fonts:
+        - asset: assets/fonts/Oxygen-Bold.ttf
+
+  # An image asset can refer to one or more resolution-specific "variants", see
+  # https://flutter.dev/assets-and-images/#resolution-aware.
+  # For details regarding adding assets from package dependencies, see
+  # https://flutter.dev/assets-and-images/#from-packages
+  # To add custom fonts to your application, add a fonts section here,
+  # in this "flutter" section. Each entry in this list should have a
+  # "family" key with the font family name, and a "fonts" key with a
+  # list giving the asset and other descriptors for the font. For
+  # example:
+  # fonts:
+  #   - family: Schyler
+  #     fonts:
+  #       - asset: fonts/Schyler-Regular.ttf
+  #       - asset: fonts/Schyler-Italic.ttf
+  #         style: italic
+  #   - family: Trajan Pro
+  #     fonts:
+  #       - asset: fonts/TrajanPro.ttf
+  #       - asset: fonts/TrajanPro_Bold.ttf
+  #         weight: 700
+  #
+  # For details regarding fonts from package dependencies,
+  # see https://flutter.dev/custom-fonts/#from-packages
