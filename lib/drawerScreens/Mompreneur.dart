@@ -27,7 +27,6 @@ class _MompreneurState extends State<Mompreneur> with SingleTickerProviderStateM
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      resizeToAvoidBottomPadding: false,
       body: Column(
         children: [
           Container(
@@ -63,7 +62,6 @@ class _MompreneurState extends State<Mompreneur> with SingleTickerProviderStateM
               // Diary(),
               ListBuilder(
                 storyList: popularStories,
-                isDiary: true,
               ),
             ],
           ),
@@ -167,6 +165,7 @@ class _NestedTabBarState extends State<NestedTabBar>
                               return CommonCardViewScreen(
                                 storyList: interviewStoryList,
                                 boxFit: BoxFit.scaleDown,
+                                hideSpeechButton: true,
                               );
                             }
                             return circularProgressIndicator();
@@ -182,6 +181,7 @@ class _NestedTabBarState extends State<NestedTabBar>
                               return CommonCardViewScreen(
                                 storyList: diaryStoryList,
                                 boxFit: BoxFit.scaleDown,
+                                hideSpeechButton: true,
                               );
                             }
                             return circularProgressIndicator();

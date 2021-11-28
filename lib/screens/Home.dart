@@ -15,6 +15,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 SharedPreferences preferences;
+bool userAdmin = false;
+int noOfDays;
 
 class Home extends StatefulWidget {
   @override
@@ -22,7 +24,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
-  bool userAdmin = false;
+
   TabController tabController;
   bool isLoading = false;
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
@@ -67,9 +69,16 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             print('User is Admin');
           });
         }
+
+        FirebaseFirestore.instance.collection('sortBy').get().then((value) {
+          noOfDays = value.docs[0].get('days');
+          print('no of days = $noOfDays');
+        });
+
       }catch(e){
         print('User Not Admin');
         userAdmin = false;
+        noOfDays = 10;
       }
       setState(() {
         isLoading = false;
@@ -82,7 +91,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        resizeToAvoidBottomPadding: false,
         appBar: AppBar(
           backgroundColor: primaryColour,
           title: Text(

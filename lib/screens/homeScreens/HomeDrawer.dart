@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:tellmeastorymom/constants/constant.dart';
 import 'package:tellmeastorymom/constants/screenSize.dart';
@@ -15,6 +14,8 @@ import 'package:tellmeastorymom/screens/AddStoryScreens/textScreen.dart';
 import 'package:tellmeastorymom/screens/LoginScreen.dart';
 import 'package:tellmeastorymom/screens/homeScreens/Bookmarks.dart';
 import 'package:tellmeastorymom/providers/userData.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeDrawer extends StatefulWidget {
   final admin;
@@ -165,7 +166,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
           Padding(
             padding: const EdgeInsets.only(top: 5.0),
             child: Container(
-              height: 45.0,
+              height: 40.0,
               child: ListTile(
                 onTap: () {
                   Navigator.pop(context);
@@ -187,7 +188,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
             ),
           ),
           Container(
-            height: 45.0,
+            height: 40.0,
             child: ListTile(
               onTap: () {
                 Navigator.pop(context);
@@ -209,7 +210,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
             ),
           ),
           Container(
-            height: 45.0,
+            height: 40.0,
             child: ListTile(
               onTap: () {
                 Navigator.of(context)
@@ -229,7 +230,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
             ),
           ),
           Container(
-            height: 45.0,
+            height: 40.0,
             child: ListTile(
               onTap: () {
                 Navigator.of(context)
@@ -249,7 +250,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
             ),
           ),
           widget.admin == true ? Container(
-            height: 45.0,
+            height: 40.0,
             child: ListTile(
               onTap: () {
                     Navigator.pop(context);
@@ -270,7 +271,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
             ),
           ) : SizedBox(),
           Container(
-            height: 45.0,
+            height: 40.0,
             child: ListTile(
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
@@ -290,17 +291,32 @@ class _HomeDrawerState extends State<HomeDrawer> {
             ),
           ),
           Container(
-            height: 45.0,
+            height: 40.0,
+            child: ListTile(
+              onTap: () {
+                launch(
+                    "https://www.tellmeastorymom.com");
+              },
+              leading: Icon(
+                Icons.computer_rounded,
+                color: Colors.black,
+                size: 24 * ScreenSize.heightMultiplyingFactor,
+              ),
+              title: Text(
+                "Visit Our Website",
+                style: TextStyle(
+                    fontFamily: 'Poppins-Regular',
+                    fontSize: 18.0 * ScreenSize.heightMultiplyingFactor),
+              ),
+            ),
+          ),
+          Container(
+            height: 40.0,
             child: ListTile(
               onTap: () async {
                 Navigator.pop(context);
                 final Email email = Email(
-                 // body: 'Email body',
-                  subject: 'Tellmeastorymom',
                   recipients: ['tellmeastorymom28@gmail.com'],
-                 // cc: ['cc@example.com'],
-                 // bcc: ['bcc@example.com'],
-                 // attachmentPaths: ['/path/to/attachment.zip'],
                   isHTML: false,
                 );
 
@@ -329,7 +345,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
             color: Color(0xFF707070),
           ),
           Container(
-            height: 45.0,
+            height: 40.0,
             child: ListTile(
               onTap: () {
                 try {

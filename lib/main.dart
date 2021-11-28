@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tellmeastorymom/constants/constant.dart';
 import 'screens/SplashScreen.dart';
 
 int initScreen3;
@@ -23,11 +22,6 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // precacheImage(
-    //     AssetImage(
-    //       'assets/images/splashScreen.png',
-    //     ),
-    //     context);
     precacheImage(
         AssetImage(
           'assets/images/googleIcon.png',
@@ -43,7 +37,6 @@ class MyApp extends StatelessWidget {
           'assets/images/shareImage.png',
         ),
         context);
-
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     return MaterialApp(

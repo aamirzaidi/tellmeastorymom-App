@@ -15,7 +15,6 @@ class _ShareWithFriendsState extends State<ShareWithFriends> {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        resizeToAvoidBottomPadding: false,
         appBar:
             appBarOverall(heading: "Share with friends", searchThere: false),
         body: Container(

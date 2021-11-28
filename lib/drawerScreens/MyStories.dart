@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tellmeastorymom/commonWidgets/CommonCardViewScreen.dart';
 import 'package:tellmeastorymom/commonWidgets/SearchScreen.dart';
 import 'package:tellmeastorymom/constants/constant.dart';
-import 'package:tellmeastorymom/constants/screenSize.dart';
 import 'package:tellmeastorymom/providers/storyData.dart';
 import 'package:tellmeastorymom/providers/userData.dart';
 
@@ -20,7 +18,6 @@ class _MyStoriesState extends State<MyStories> {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        resizeToAvoidBottomPadding: false,
         appBar: appBarOverall(
             heading: "My Stories",
             onPressed: () {
@@ -35,7 +32,7 @@ class _MyStoriesState extends State<MyStories> {
               myStories.clear();
               if (snapshot.hasData){
                 snapshot.data.docs.forEach((result) {
-                  if(result.data()["author"] == UserData.getUserName()){
+                  if(result.get("author") == UserData.getUserName()){
                     myStories.add(StoryData.fromSnapshot(result));
                   }
                 });

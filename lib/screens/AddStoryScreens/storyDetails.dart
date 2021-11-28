@@ -158,7 +158,6 @@ class _StoryDetailsState extends State<StoryDetails> {
     });
   }
 
-
   @override
   void initState() {
     fetchCategories();
@@ -198,7 +197,6 @@ class _StoryDetailsState extends State<StoryDetails> {
                       onPressed: () async {
                         if (_formKey.currentState.validate()) {
                           String doc = await _loadDocument();
-
                           QuerySnapshot snapshot =
                               await FirebaseFirestore.instance
                                   .collection('Users')
@@ -209,7 +207,7 @@ class _StoryDetailsState extends State<StoryDetails> {
                                   )
                                   .get();
                           String author =
-                              await snapshot.docs.first.data()['displayName'];
+                              await snapshot.docs.first.get('displayName');
 
                           globalKey.currentState.showSnackBar(SnackBar(content: Text('Uploading, Please Wait !!',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),)));
 
@@ -223,7 +221,7 @@ class _StoryDetailsState extends State<StoryDetails> {
                           StoryData storyData = new StoryData(
                             title: title.text,
                             posted:
-                                'Posted on ${getMonthName(DateTime.now().month)} ${DateTime.now().day}, ${DateTime.now().year}',
+                                'Posted on ${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}',
                             content: doc,
                             related: chosenCategories,
                             author: author,

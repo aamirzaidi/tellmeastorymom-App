@@ -27,7 +27,6 @@ class _SearchScreenState extends State<SearchScreen> {
       child: Scaffold(
         backgroundColor: Colors.white,
         resizeToAvoidBottomInset: false,
-        resizeToAvoidBottomPadding: false,
         appBar: AppBar(
           backgroundColor: primaryColour,
           automaticallyImplyLeading: false,

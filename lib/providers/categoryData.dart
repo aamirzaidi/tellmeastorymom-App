@@ -8,10 +8,10 @@ class CategoryData {
   CategoryData({this.categoryName, this.categoryStories, this.id});
 
   CategoryData.fromSnapshot(DocumentSnapshot snapshot) {
-    this.categoryName = snapshot.data()['categoryName'];
-    this.categoryStories = snapshot.data()['categoryStories'] == null
+    this.categoryName = snapshot.get('categoryName');
+    this.categoryStories = snapshot.get('categoryStories') == null
         ? []
-        : snapshot.data()['categoryStories'].cast<String>();
+        : snapshot.get('categoryStories').cast<String>();
     this.id = snapshot.id.toString();
   }
 

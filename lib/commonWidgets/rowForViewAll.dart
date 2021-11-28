@@ -11,8 +11,8 @@ class RowViewAll extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        left: 18.0 * ScreenSize.widthMultiplyingFactor,
-        right: 28.0 * ScreenSize.widthMultiplyingFactor,
+        left: 16.0 * ScreenSize.widthMultiplyingFactor,
+        right: 13.0 * ScreenSize.widthMultiplyingFactor,
         bottom: 10.0 * ScreenSize.heightMultiplyingFactor,
       ),
       child: Row(

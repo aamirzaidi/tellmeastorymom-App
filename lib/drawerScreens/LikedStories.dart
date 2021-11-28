@@ -24,7 +24,6 @@ class _LikedStoriesState extends State<LikedStories> {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        resizeToAvoidBottomPadding: false,
         appBar: appBarOverall(
             heading: "Liked Stories",
             onPressed: () {
@@ -39,11 +38,16 @@ class _LikedStoriesState extends State<LikedStories> {
               likedStories.clear();
               if (snapshot.hasData)
                 snapshot.data.docs.forEach((result) {
-                  List<String> likedListData = result.data()["isLiked"] == null
-                      ? []
-                      : result.data()["isLiked"].cast<String>();
-                  if (likedListData.contains(UserData.getUserId()))
-                    likedStories.add(StoryData.fromSnapshot(result));
+                  List<String> likedListData;
+                  try{
+                    likedListData = result.get("isLiked") == null
+                        ? []
+                        : result.get("isLiked").cast<String>();
+                    if (likedListData.contains(UserData.getUserId()))
+                      likedStories.add(StoryData.fromSnapshot(result));
+                  }catch(e) {
+                    likedListData = [];
+                  }
                 });
               return CommonCardViewScreen(
                 storyList: likedStories,

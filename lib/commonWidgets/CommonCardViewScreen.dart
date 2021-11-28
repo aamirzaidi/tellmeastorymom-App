@@ -1,18 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_advanced_networkimage/provider.dart';
 import 'package:tellmeastorymom/constants/constant.dart';
 import 'package:tellmeastorymom/constants/screenSize.dart';
 import 'package:tellmeastorymom/providers/storyData.dart';
 import 'package:tellmeastorymom/providers/userData.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import 'Readings.dart';
 
 class CommonCardViewScreen extends StatefulWidget {
   final List<StoryData> storyList;
   final BoxFit boxFit;
+  final hideSpeechButton;
 
-  const CommonCardViewScreen({Key key, this.storyList, this.boxFit = BoxFit.cover}) : super(key: key);
+  const CommonCardViewScreen({Key key, this.storyList, this.boxFit = BoxFit.cover,this.hideSpeechButton = false}) : super(key: key);
   @override
   _CommonCardViewScreenState createState() => _CommonCardViewScreenState();
 }
@@ -72,6 +73,9 @@ class _CommonCardViewScreenState extends State<CommonCardViewScreen> {
               physics: physicsForApp,
               itemCount: widget.storyList.length,
               itemBuilder: (context, index) {
+
+                print("URL = ${widget.storyList[index].storyImageURL}");
+
                 return GestureDetector(
                   onTap: () {
                     print(recentlyViewedStories
@@ -80,7 +84,6 @@ class _CommonCardViewScreenState extends State<CommonCardViewScreen> {
                                 element.id == widget.storyList[index].id) ==
                             -1 &&
                         recentlyViewedStories.length < 7) {
-                      // recentlyViewedStories.add(widget.storyList[index]);
                       firebaseFirestore
                           .collection("Users")
                           .doc(UserData.getUserId())
@@ -112,6 +115,7 @@ class _CommonCardViewScreenState extends State<CommonCardViewScreen> {
                     // setState(() {});
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => Readings(
+                        hideSpeechButton: widget.hideSpeechButton,
                         story: widget.storyList[index],
                       ),
                     ));
@@ -142,13 +146,8 @@ class _CommonCardViewScreenState extends State<CommonCardViewScreen> {
                                   ),
                                 ],
                                 image: DecorationImage(
-                                  image: AdvancedNetworkImage(
-                                    widget.storyList[index].storyImageURL ?? ''
-                                        'https://i0.wp.com/www.tellmeastorymom.com/wp-content/'
-                                        'uploads/2017/12/400dpiLogo-1-e1591671639224.jpg?fit=600%2C362&ssl=1',
-                                    useDiskCache: true,
-                                    cacheRule: CacheRule(
-                                        maxAge: const Duration(days: 2)),
+                                  image: NetworkImage(
+                                    widget.storyList[index].storyImageURL,
                                   ),
                                   fit: widget.boxFit,
                                 ),

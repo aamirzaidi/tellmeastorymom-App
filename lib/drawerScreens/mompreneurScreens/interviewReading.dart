@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_advanced_networkimage/provider.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:share/share.dart';
@@ -58,7 +57,6 @@ class _InterviewReadingState extends State<InterviewReading> {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        resizeToAvoidBottomPadding: false,
         body: ListView(
           scrollDirection: Axis.vertical,
           children: <Widget>[
@@ -347,17 +345,14 @@ class _InterviewStoryHeaderState extends State<InterviewStoryHeader> {
                       color: Colors.black.withOpacity(0.16),
                     ),
                   ],
-                  image: DecorationImage(
-                    // image: AssetImage(
-                    //   'assets/images/cardImage.jpg',
-                    // ),
-                    image: AdvancedNetworkImage(
-                      widget.story.storyImageURL,
-                      useDiskCache: true,
-                      cacheRule: CacheRule(maxAge: const Duration(days: 2)),
-                    ),
-                    fit: BoxFit.cover,
-                  ),
+                  // image: DecorationImage(
+                  //   image: AdvancedNetworkImage(
+                  //     widget.story.storyImageURL,
+                  //     useDiskCache: true,
+                  //     cacheRule: CacheRule(maxAge: const Duration(days: 2)),
+                  //   ),
+                  //   fit: BoxFit.cover,
+                  // ),
                 ),
               ),
               Padding(
@@ -448,18 +443,6 @@ class _InterviewStoryHeaderState extends State<InterviewStoryHeader> {
                 EdgeInsets.only(left: 15 * ScreenSize.heightMultiplyingFactor),
             child: Text(
               widget.story.posted,
-              style: TextStyle(
-                fontFamily: 'Poppins-Regular',
-                fontSize: 14.0 * ScreenSize.heightMultiplyingFactor,
-                color: Colors.black.withOpacity(0.5),
-              ),
-            ),
-          ),
-          Padding(
-            padding:
-                EdgeInsets.only(left: 15 * ScreenSize.heightMultiplyingFactor),
-            child: Text(
-              'Estimated time to complete: ' + widget.story.estimated,
               style: TextStyle(
                 fontFamily: 'Poppins-Regular',
                 fontSize: 14.0 * ScreenSize.heightMultiplyingFactor,

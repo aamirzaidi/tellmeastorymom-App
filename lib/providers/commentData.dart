@@ -5,16 +5,17 @@ class CommentData {
   String content;
   String postedOn;
   String id;
+  String storyId;
   double ratingStars;
 
   CommentData(
-      {this.commentBy, this.content, this.id, this.postedOn, this.ratingStars});
+      {this.commentBy, this.content, this.id, this.postedOn, this.ratingStars,this.storyId});
 
   CommentData.fromSnapshot(DocumentSnapshot snapshot) {
-    this.commentBy = snapshot.data()['commentBy'];
-    this.content = snapshot.data()['content'];
-    this.postedOn = snapshot.data()['postedOn'];
-    this.ratingStars = double.parse(snapshot.data()['ratingStars'].toString());
+    this.commentBy = snapshot.get('commentBy');
+    this.content = snapshot.get('content');
+    this.postedOn = snapshot.get('postedOn');
+    this.ratingStars = double.parse(snapshot.get('ratingStars').toString());
     this.id = snapshot.id.toString();
   }
 

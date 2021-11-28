@@ -1,12 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_advanced_networkimage/provider.dart';
 import 'package:tellmeastorymom/constants/constant.dart';
 import 'package:tellmeastorymom/constants/screenSize.dart';
-import 'package:tellmeastorymom/drawerScreens/mompreneurScreens/interviewReading.dart';
 import 'package:tellmeastorymom/providers/storyData.dart';
 import 'package:tellmeastorymom/providers/userData.dart';
-
 import 'Readings.dart';
 
 class HomeScreenCardView extends StatefulWidget {
@@ -67,11 +64,10 @@ class _HomeScreenCardViewState extends State<HomeScreenCardView> {
                       // setState(() {});
                     }
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => !widget.isInterview
-                          ? Readings(
+                      builder: (context) =>
+                          Readings(
                               story: widget.storyList[index],
                             )
-                          : InterviewReading(story: widget.storyList[index], isDiary: widget.isDiary),
                     ));
                   },
                   child: Container(
@@ -97,13 +93,8 @@ class _HomeScreenCardViewState extends State<HomeScreenCardView> {
                                   ),
                                 ],
                                 image: DecorationImage(
-
-                                  image: AdvancedNetworkImage(
-                                    widget.storyList[index].storyImageURL ??
-                                    'https://firebasestorage.googleapis.com/v0/b/tellmeastorymom-c02e1.'
-                                        'appspot.com/o/400dpiLogo-1-e1591671639224.jpg?alt=media&token=124e45cf-b7c3-4902-aeda-94edaf79c66c',
-                                    useDiskCache: true,
-                                    cacheRule: CacheRule(maxAge: const Duration(days: 2)),
+                                  image: NetworkImage(
+                                    widget.storyList[index].storyImageURL,
                                   ),
                                   fit: BoxFit.cover,
                                 ),
@@ -134,18 +125,6 @@ class _HomeScreenCardViewState extends State<HomeScreenCardView> {
                                               size: 35 * ScreenSize.heightMultiplyingFactor,
                                             ),
                                             onTap: () {
-                                              // setState(() {
-                                              //   widget.storyList[index].isBookmarked =
-                                              //       !widget.storyList[index]
-                                              //           .isBookmarked;
-                                              // });
-                                              // firebaseFirestore
-                                              //     .collection("Stories")
-                                              //     .doc(widget.storyList[index].id)
-                                              //     .update({
-                                              //   "isBookmarked": widget
-                                              //       .storyList[index].isBookmarked
-                                              // });
                                               bool valueOfList = widget.storyList[index].isBookmarked.contains(UserData.getUserId());
                                               if (valueOfList) {
                                                 firebaseFirestore.collection("Stories").doc(widget.storyList[index].id).update({

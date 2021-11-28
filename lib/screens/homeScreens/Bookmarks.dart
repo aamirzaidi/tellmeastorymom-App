@@ -58,7 +58,6 @@ class _BookMarkScreenState extends State<BookMarkScreen> {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        resizeToAvoidBottomPadding: false,
         appBar: appBarOverall(
             heading: "Bookmarks",
             onPressed: () {
@@ -73,7 +72,13 @@ class _BookMarkScreenState extends State<BookMarkScreen> {
             bookmarkedStories.clear();
             if (snapshot.hasData)
               snapshot.data.docs.forEach((result) {
-                List<String> bookmarkListData = result.data()["isBookmarked"] == null ? [] : result.data()["isBookmarked"].cast<String>();
+                List<String> bookmarkListData;
+                try{
+                  bookmarkListData = result.get("isBookmarked") == null ? [] : result.get("isBookmarked").cast<String>();
+                }catch(e){
+                  bookmarkListData = [];
+                }
+
                 if (bookmarkListData.contains(UserData.getUserId())) bookmarkedStories.add(StoryData.fromSnapshot(result));
               });
             return CommonCardViewScreen(

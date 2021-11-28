@@ -1,14 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:tellmeastorymom/commonWidgets/CommonCardViewScreen.dart';
-import 'package:tellmeastorymom/commonWidgets/HomeScreenCardView.dart';
 import 'package:tellmeastorymom/constants/constant.dart';
 import 'package:tellmeastorymom/constants/screenSize.dart';
 import 'package:tellmeastorymom/providers/db.dart';
 import 'package:tellmeastorymom/providers/storyData.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:expand_widget/expand_widget.dart';
-import 'package:tellmeastorymom/providers/storyData.dart';
+import 'package:tellmeastorymom/screens/AddStoryScreens/editScreen.dart';
 
 class AdminArea extends StatelessWidget {
   @override
@@ -82,6 +79,7 @@ class _PendingStoriesPageState extends State<PendingStoriesPage> {
         return Padding(
             padding: EdgeInsets.all(8.0),
             child: ListView.builder(
+              shrinkWrap: true,
                 itemCount: snapshot.data.docs.length,
                 itemBuilder: (context, index) {
 
@@ -98,7 +96,6 @@ class _PendingStoriesPageState extends State<PendingStoriesPage> {
                     return Center(child: Text('No Stories Uploaded',style: TextStyle(fontSize: 30.0,color: primaryColour),),);
                   }
 
-
                   return PendingStoryCard(
                     title: snapshot.data.docs[index].get('title'),
                     content: snapshot.data.docs[index].get('content'),
@@ -106,7 +103,6 @@ class _PendingStoriesPageState extends State<PendingStoriesPage> {
                     imageUrl: snapshot.data.docs[index].get('storyImageURL'),
                     isLatest: snapshot.data.docs[index].get('isLatest'),
                     posted: snapshot.data.docs[index].get('posted'),
-                   // email: snapshot.data.docs[index].get('email'),
                     related: snapshot.data.docs[index].get('related'),
                     gradientColors: [primaryColour,Color(0xff861657)],
                     arrowColor: primaryColour,
@@ -116,9 +112,7 @@ class _PendingStoriesPageState extends State<PendingStoriesPage> {
 
                       StoryData storyData = new StoryData(
                         title: snapshot.data.docs[index].get('title'),
-
-                        posted:
-                        'Posted on ${getMonthName(DateTime.now().month)} ${DateTime.now().day}, ${DateTime.now().year}',
+                        posted: snapshot.data.docs[index].get('posted'),
                         content: snapshot.data.docs[index].get('content'),
                         related: chosenCategories.cast<String>(),
                         author: snapshot.data.docs[index].get('author'),
@@ -141,6 +135,31 @@ class _PendingStoriesPageState extends State<PendingStoriesPage> {
                       setState(() {});
                       Scaffold.of(context).showSnackBar(SnackBar(content: Text('Story Deleted!')));
                     },
+                    editContentCallBack: ()async{
+                      var documentID = snapshot.data.docs[index].id;
+                      var editStorySnapshot = await FirebaseFirestore.instance.collection('PendingStories').doc(documentID).get();
+                      String contentToEdit = editStorySnapshot.get('content');
+                      print("content  =  $contentToEdit");
+                      Navigator.push(context, MaterialPageRoute(builder: (content) => EditScreen(
+                        fieldName: 'content',
+                        docID: documentID,
+                        content: contentToEdit,
+                        collectionName: 'PendingStories',
+                      )));
+                    },
+                    editTitleCallBack: ()async{
+                    var documentID = snapshot.data.docs[index].id;
+                    var editStorySnapshot = await FirebaseFirestore.instance.collection('PendingStories').doc(documentID).get();
+                    String titleToEdit = editStorySnapshot.get('title');
+                    print("content  =  $titleToEdit");
+                    Navigator.push(context, MaterialPageRoute(builder: (content) => EditScreen(
+                      fieldName: 'title',
+                      docID: documentID,
+                      content: titleToEdit,
+                      collectionName: 'PendingStories',
+                    )));
+                  },
+
                   );
                 }));
       },
@@ -148,13 +167,12 @@ class _PendingStoriesPageState extends State<PendingStoriesPage> {
   }
 }
 
+// ignore: must_be_immutable
 class PendingStoryCard extends StatelessWidget {
-
   PendingStoryCard(
       {
         this.title,
         this.author,
-       // this.email,
         this.content,
         this.isLatest,
         this.gradientColors,
@@ -164,6 +182,8 @@ class PendingStoryCard extends StatelessWidget {
         this.related,
         this.deleteCallBack,
         this.approveCallBack,
+        this.editContentCallBack,
+        this.editTitleCallBack,
       });
 
   final related;
@@ -172,13 +192,14 @@ class PendingStoryCard extends StatelessWidget {
   final isLatest;
   final author;
   final title;
- // final email;
   final imageUrl;
   final gradientColors;
   final arrowColor;
 
   Function deleteCallBack;
   Function approveCallBack;
+  Function editContentCallBack;
+  Function editTitleCallBack;
 
   @override
   Widget build(BuildContext context) {
@@ -202,9 +223,7 @@ class PendingStoryCard extends StatelessWidget {
                         minHeight: 135,
                       ),
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: gradientColors,
-                        ),
+                        gradient: LinearGradient(colors: gradientColors,),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -301,6 +320,16 @@ class PendingStoryCard extends StatelessWidget {
                         color: Colors.redAccent,
                         child: Text('Disapprove',style: TextStyle(color: Colors.white),),
                         onPressed: deleteCallBack,
+                      ),
+                      RaisedButton(
+                        color: Colors.green,
+                        child: Text('Edit',style: TextStyle(color: Colors.white),),
+                        onPressed: editContentCallBack,
+                      ),
+                      RaisedButton(
+                        color: Colors.deepOrangeAccent,
+                        child: Text('Edit Title',style: TextStyle(color: Colors.white),),
+                        onPressed: editTitleCallBack,
                       ),
                     ],
                     mainAxisSize: MainAxisSize.max,

@@ -1,9 +1,11 @@
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_advanced_networkimage/provider.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:share/share.dart';
 import 'package:tellmeastorymom/commonWidgets/HomeScreenCardView.dart';
@@ -13,6 +15,8 @@ import 'package:tellmeastorymom/constants/screenSize.dart';
 import 'package:tellmeastorymom/providers/commentData.dart';
 import 'package:tellmeastorymom/providers/storyData.dart';
 import 'package:tellmeastorymom/providers/userData.dart';
+import 'package:tellmeastorymom/screens/AddStoryScreens/editScreen.dart';
+import 'package:tellmeastorymom/screens/Home.dart';
 import 'StoriesScreen.dart';
 import 'commentList.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -21,8 +25,9 @@ FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 
 class Readings extends StatefulWidget {
   final StoryData story;
+  final hideSpeechButton;
 
-  const Readings({Key key, this.story}) : super(key: key);
+  const Readings({Key key, this.story,this.hideSpeechButton = false}) : super(key: key);
 
   @override
   _ReadingsState createState() => _ReadingsState();
@@ -42,27 +47,10 @@ class _ReadingsState extends State<Readings> {
     storySecondaryColor = tempColor;
     setState(() {});
   }
-/*String text="";
-  String replace(){
-    if(widget.story.content.contains("\n")) {
-    text= widget.story.content.replaceAll(RegExp(r'\\n'), "\n");
 
-    }else if(widget.story.content.contains("<b>")){
-      String sub="";
-     while(!widget.story.content.contains("</b>")) {
-        sub+=widget.story.content+" ";
-      }
-     var str=new RegExp(widget.story.content);
-      text= widget.story.content.replace(str, '<b>'+sub+'</b>');
-      print(text);
-    }
-  }
-*/
   var storyPrimaryColor = Colors.white;
   var storySecondaryColor = Colors.black;
- /* FontWeight bold(){
-    return FontWeight.bold;
-  }*/
+
   int getFontSize(int index){
     if(index==0){
       return 14;
@@ -72,7 +60,51 @@ class _ReadingsState extends State<Readings> {
       return 20;
     }
   }
-
+  
+  Widget getStoryContent(String content){
+    if(content.length == 0){
+      return SizedBox(height: 0,);
+    }else{
+      return Padding(
+        padding: EdgeInsets.only(
+          left: 15 * ScreenSize.widthMultiplyingFactor,
+          right: 15 * ScreenSize.widthMultiplyingFactor,
+          top: 10,
+          bottom: 10,
+        ),
+        child: Text(
+          content.replaceAll(RegExp(r'\\n'), "\n"),
+          style: TextStyle(
+            color: storySecondaryColor,
+            fontFamily: 'Poppins-Light',
+            fontSize: fontSize * ScreenSize.heightMultiplyingFactor,
+          ),
+          textAlign: TextAlign.justify,
+        ),
+      );
+    }
+  }
+  
+  Widget getStoryImages(String url){
+    if(url == null){
+      return SizedBox(height: 0,);
+    }else{
+      return Padding(
+        padding: const EdgeInsets.only(left : 18.0, right: 18.0, top: 10.0, bottom: 10.0),
+        child: Container(
+          width: double.infinity,
+          height: 200 * ScreenSize.heightMultiplyingFactor,
+          child: Image(
+            image: NetworkImage(
+              url,
+            ),
+            fit: BoxFit.contain,
+          ),
+        ),
+      );
+    }
+  }
+  
   @override
   void initState() {
     // TODO: implement initState
@@ -90,16 +122,16 @@ class _ReadingsState extends State<Readings> {
       child: Scaffold(
         backgroundColor: storyPrimaryColor,
         resizeToAvoidBottomInset: false,
-        resizeToAvoidBottomPadding: false,
         body: ListView(
           scrollDirection: Axis.vertical,
           children: <Widget>[
             StoryHeader(
               story: widget.story,
               color: storySecondaryColor,
+              hideSpeechButton: widget.hideSpeechButton,
             ),
             Divider(
-              height: 50.0 * ScreenSize.heightMultiplyingFactor,
+              height: 30.0 * ScreenSize.heightMultiplyingFactor,
               thickness: 1.0,
               color: Color(0xFF707070),
             ),
@@ -128,36 +160,112 @@ class _ReadingsState extends State<Readings> {
                         setState(() {});
                     },
                   ),
-                  GestureDetector(
-                    onTap: toggleDarkMode,
-                    child: CircleAvatar(
-                      backgroundColor: storySecondaryColor,
-                      child:
-                      Icon(MaterialCommunityIcons.weather_night,
-                      color: storyPrimaryColor,),),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      GestureDetector(
+                        onTap: toggleDarkMode,
+                        child: CircleAvatar(
+                          backgroundColor: storySecondaryColor,
+                          child:
+                          Icon(MaterialCommunityIcons.weather_night,
+                          color: storyPrimaryColor,),),
+                      ),
+                      userAdmin == true ? Padding(
+                        padding: const EdgeInsets.only(left: 4.0),
+                        child: GestureDetector(
+                          onTap: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => SelectNewImage(storyId: widget.story.id,)));
+
+                          },
+                          child: CircleAvatar(
+                            backgroundColor: storySecondaryColor,
+                            child:
+                            Icon(MaterialCommunityIcons.image_search,
+                              color: storyPrimaryColor,),),
+                        ),
+                      ) : SizedBox(),
+                      userAdmin == true ? Padding(
+                        padding: const EdgeInsets.only(left: 4.0),
+                        child: GestureDetector(
+                          onTap: ()async{
+                            var editStorySnapshot;
+                            String contentToEdit;
+                            editStorySnapshot = await FirebaseFirestore.instance.collection('Stories').doc(widget.story.id).get();
+                            contentToEdit = editStorySnapshot.get('content');
+                            Navigator.push(context, MaterialPageRoute(
+                                builder: (content) {
+                                  return EditScreen(
+                                  fieldName: 'content',
+                                  docID: widget.story.id,
+                                  content: contentToEdit,
+                                  collectionName: 'Stories',
+                                );} ));
+                          },
+                          child: CircleAvatar(
+                            backgroundColor: storySecondaryColor,
+                            child:
+                            Icon(MaterialCommunityIcons.file_document_edit,
+                              color: storyPrimaryColor,),),
+                        ),
+                      ) : SizedBox(),
+                      userAdmin == true ? Padding(
+                         padding: const EdgeInsets.only(left: 4.0),
+                         child: GestureDetector(
+                          onTap: (){
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('Confirm Story Delete?'),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                      child: Text("Yes"),
+                                      onPressed: () async{
+                                        await FirebaseFirestore.instance.collection('Stories').doc(widget.story.id).delete().then((value) {
+                                          Navigator.pushAndRemoveUntil(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => Home(),
+                                              ),
+                                                  (Route<dynamic> route) => false);
+                                        });
+                                      },
+                                    ),
+                                    FlatButton(
+                                      child: Text("No"),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    )
+                                  ],
+                                );
+                              }
+                            );
+                          },
+                          child: CircleAvatar(
+                            backgroundColor: storySecondaryColor,
+                            child:
+                            Icon(MaterialCommunityIcons.delete,
+                              color: storyPrimaryColor,),),
+                      ),
+                       ) : SizedBox(),
+                    ],
                   ),
                 ],
               ),
             ),
-            Padding(
-              padding: EdgeInsets.only(
-                left: 15 * ScreenSize.widthMultiplyingFactor,
-                right: 15 * ScreenSize.widthMultiplyingFactor,
-              ),
-              child: Text(
-                widget.story.content.replaceAll(RegExp(r'\\n'), "\n"),
-
-                style: TextStyle(
-                  color: storySecondaryColor,
-                  fontFamily: 'Poppins-Light',
-                  fontSize: fontSize * ScreenSize.heightMultiplyingFactor,
-                ),
-                textAlign: TextAlign.justify,
-              ),
-            ),
-            SizedBox(
-              height: 30.0 * ScreenSize.heightMultiplyingFactor,
-            ),
+            getStoryContent(widget.story.content),
+            getStoryImages(widget.story.storyImageURL2),
+            getStoryContent(widget.story.content2),
+            getStoryImages(widget.story.storyImageURL3),
+            getStoryContent(widget.story.content3),
+            getStoryImages(widget.story.storyImageURL4),
+            getStoryContent(widget.story.content4),
+            getStoryImages(widget.story.storyImageURL5),
+            getStoryContent(widget.story.content5),
+            getStoryImages(widget.story.storyImageURL6),
+            getStoryContent(widget.story.content6),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -203,11 +311,15 @@ class _ReadingsState extends State<Readings> {
                         builder: (context, snapshot) {
                           List<String> isLiked = [];
                           if (snapshot.hasData) {
-                            isLiked = snapshot.data.data()["isLiked"] == null
-                                ? []
-                                : snapshot.data
-                                    .data()["isLiked"]
-                                    .cast<String>();
+                            try{
+                              isLiked = snapshot.data.get("isLiked") == null
+                                  ? []
+                                  : snapshot.data
+                                  .get("isLiked")
+                                  .cast<String>();
+                            }catch(e){
+                              isLiked = [];
+                            }
                           }
                           print(isLiked.length);
                           return GestureDetector(
@@ -289,9 +401,9 @@ class _ReadingsState extends State<Readings> {
                     builder: (context, snapshot) {
                       recents.clear();
                       if (snapshot.hasData) {
-                        recents = snapshot.data.data()["recents"] == null
+                        recents = snapshot.data.get("recents")== null
                             ? []
-                            : snapshot.data.data()["recents"].cast<String>();
+                            : snapshot.data.get("recents").cast<String>();
                         return StreamBuilder<QuerySnapshot>(
                           stream: firebaseFirestore.collection("Stories").snapshots(),
                           builder: (context, snapshot) {
@@ -349,17 +461,22 @@ class _ReadingsState extends State<Readings> {
                       commentList.clear();
                       if (snapshot.hasData) {
                         snapshot.data.docs.forEach((result) {
-                          commentList.add(CommentData.fromSnapshot(result));
-                          print(result);
+                          commentList.add(
+                            CommentData(
+                                storyId: widget.story.id,
+                                ratingStars: double.parse(result.get('ratingStars').toString()),
+                                id: result.id.toString(),
+                                postedOn : result.get('postedOn'),
+                                commentBy: result.get('commentBy'),
+                                content: result.get('content'),
+                            ),
+                          );
                         });
                       }
-                      // print(commentList[0]);
                       return CommentList(
                         hasRating: true,
                         commentList: commentList,
                       );
-                      // }
-                      // return circularProgressIndicator();
                     },
                   ),
                   SizedBox(
@@ -368,8 +485,6 @@ class _ReadingsState extends State<Readings> {
                 ],
               ),
             ),
-
-
           ],
         ),
       ),
@@ -380,8 +495,9 @@ class _ReadingsState extends State<Readings> {
 class StoryHeader extends StatefulWidget {
   final StoryData story;
   final color;
+  final hideSpeechButton;
 
-  const StoryHeader({Key key, this.story,this.color}) : super(key: key);
+  const StoryHeader({Key key, this.story,this.color,this.hideSpeechButton = false}) : super(key: key);
   @override
   _StoryHeaderState createState() => _StoryHeaderState();
 }
@@ -409,13 +525,13 @@ class _StoryHeaderState extends State<StoryHeader> {
   @override
   Widget build(BuildContext context) {
     speak() async {
+      print(widget.story.content);
       await flutterTts.setLanguage("en-US");
       await flutterTts.setPitch(1.4);
       await flutterTts.setSpeechRate(0.85);
       await flutterTts.speak(
-//          widget.story.title.replaceAll(RegExp(r'\\n'), "\n") +
-//              "\n\n\n\n" +
-              widget.story.content.replaceAll(RegExp(r'\\n'), "\n"));
+          widget.story.content.replaceAll(RegExp(r'\\n'), "\n"));
+
     }
 
     double overallRating = 0;
@@ -425,8 +541,8 @@ class _StoryHeaderState extends State<StoryHeader> {
         await flutterTts.stop();
         Navigator.of(context).pop();
       },
+
       child: Container(
-//      margin: EdgeInsets.only(right: 0.0, left: 0.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -451,13 +567,8 @@ class _StoryHeaderState extends State<StoryHeader> {
                       ),
                     ],
                     image: DecorationImage(
-                      // image: AssetImage(
-                      //   'assets/images/cardImage.jpg',
-                      // ),
-                      image: AdvancedNetworkImage(
-                        widget.story.storyImageURL ?? 'https://i0.wp.com/www.tellmeastorymom.com/wp-content/uploads/2017/12/400dpiLogo-1-e1591671639224.jpg?fit=600%2C362&ssl=1',
-                        useDiskCache: true,
-                        cacheRule: CacheRule(maxAge: const Duration(days: 2)),
+                      image: NetworkImage(
+                        widget.story.storyImageURL,
                       ),
                       fit: BoxFit.cover,
                     ),
@@ -489,12 +600,15 @@ class _StoryHeaderState extends State<StoryHeader> {
                         ),
                       ),
                       Spacer(),
-//                      SizedBox(
-//                        width: 220.0 * ScreenSize.widthMultiplyingFactor,
-//                      ),
-                      GestureDetector(
-                        onTap: () {
-                          speak();
+                      widget.hideSpeechButton == false ? GestureDetector(
+                        onTap: () async{
+                          Scaffold.of(context).showSnackBar(SnackBar(
+                            backgroundColor: primaryColour,
+                            content: Text('Double tap the icon again to stop Computer Voice!',
+                            style: TextStyle(color: Colors.white,
+                            ),),
+                          ));
+                          await speak();
                         },
                         onDoubleTap: () async {
                           await flutterTts.stop();
@@ -515,7 +629,7 @@ class _StoryHeaderState extends State<StoryHeader> {
                             color: Colors.black,
                           ),
                         ),
-                      ),
+                      ) : SizedBox(),
                       SizedBox(
                         width: 20.0 * ScreenSize.widthMultiplyingFactor,
                       ),
@@ -527,12 +641,17 @@ class _StoryHeaderState extends State<StoryHeader> {
                         builder: (context, snapshot) {
                           List<String> isBookmarked = [];
                           if (snapshot.hasData) {
-                            isBookmarked =
-                                snapshot.data.data()["isBookmarked"] == null
-                                    ? []
-                                    : snapshot.data
-                                        .data()["isBookmarked"]
-                                        .cast<String>();
+                            try{
+                              isBookmarked =
+                              snapshot.data.get("isBookmarked") == null
+                                  ? []
+                                  : snapshot.data
+                                  .get("isBookmarked")
+                                  .cast<String>();
+                            }catch(e){
+                              isBookmarked = [];
+                            }
+
                           }
 
                           return GestureDetector(
@@ -658,18 +777,6 @@ class _StoryHeaderState extends State<StoryHeader> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(
-                  left: 15 * ScreenSize.heightMultiplyingFactor),
-              child: Text(
-                'Estimated time to complete:  ${widget.story.estimated}',
-                style: TextStyle(
-                  fontFamily: 'Poppins-Regular',
-                  fontSize: 14.0 * ScreenSize.heightMultiplyingFactor,
-                  color: widget.color,
-                ),
-              ),
-            ),
-            Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: 15.0 * ScreenSize.widthMultiplyingFactor,
               ),
@@ -686,7 +793,7 @@ class _StoryHeaderState extends State<StoryHeader> {
                     snapshot.data.docs.forEach((result) {
                       commentCount++;
                       overallRating +=
-                          double.parse(result.data()['ratingStars'].toString());
+                          double.parse(result.get('ratingStars').toString());
                       print(result);
                     });
                     overallRating /= commentCount;
@@ -962,5 +1069,246 @@ class _UserReviewState extends State<UserReview> {
         ],
       ),
     );
+  }
+}
+
+class SelectNewImage extends StatefulWidget {
+  final storyId;
+  SelectNewImage({@required this.storyId});
+  
+  @override
+  _SelectNewImageState createState() => _SelectNewImageState();
+}
+
+class _SelectNewImageState extends State<SelectNewImage> {
+
+  File image;
+  String uploadedFileURL;
+  final picker = ImagePicker();
+
+  void _startPickingImage(BuildContext ctx) {
+    showModalBottomSheet(
+      backgroundColor: Colors.white,
+      context: ctx,
+      builder: (_) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            SizedBox(height: 10),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: ListTile(
+                  dense: true,
+                  trailing: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          image = null;
+                        });
+                        Navigator.of(ctx).pop();
+                      },
+                      icon: Icon(
+                        Icons.delete,
+                        size: 30,
+                        color: Colors.black45,
+                      )),
+                  title: Text(
+                    'Choose An Option',
+                    style: TextStyle(
+                        fontFamily: "Gilroy",
+                        color: Colors.black45,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            ),
+            //SizedBox(height: 5),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    IconButton(
+                      icon: Icon(
+                        Icons.add_a_photo,
+                        size: 30,
+                        color: Colors.redAccent,
+                      ),
+                      onPressed: pickImageFromCamera,
+                    ),
+                    Text(
+                      'Camera',
+                      style: TextStyle(
+                          fontFamily: "Gilroy",
+                          color: Colors.black45,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    IconButton(
+                      icon: Icon(
+                        Icons.add_photo_alternate,
+                        size: 30,
+                        color: Colors.redAccent,
+                      ),
+                      onPressed: pickImageFromGallary,
+                    ),
+                    Text(
+                      'Gallery',
+                      style: TextStyle(
+                          fontFamily: "Gilroy",
+                          color: Colors.black45,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+          ],
+        );
+      },
+    );
+  }
+
+  Future pickImageFromGallary() async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    setState(() {
+      if (pickedFile != null) {
+        image = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
+    Navigator.pop(context);
+  }
+
+  Future pickImageFromCamera() async {
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
+    setState(() {
+      if (pickedFile != null) {
+        image = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
+    Navigator.pop(context);
+  }
+
+  Future<String> uploadFile(File img) async {
+    var path = img.path;
+    Reference storageReference = FirebaseStorage.instance
+        .ref()
+        .child('storyThumbnail/${path.split("/").last}}}');
+    UploadTask uploadTask = storageReference.putFile(img);
+    await uploadTask.whenComplete(() async {
+      print('File Uploaded');
+      uploadedFileURL = await storageReference.getDownloadURL();
+    });
+  }
+
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: primaryColour,
+        centerTitle: true,
+        title: Text("Select New Image"),
+      ),
+      body: Builder(
+        builder: (context) => Column(
+          children: [
+            SizedBox(height: 60.0,),
+            Container(
+              margin: EdgeInsets.all(10.0),
+              padding: EdgeInsets.only(left: 10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.0),
+                color: image == null ? primaryColour : Colors.white,
+              ),
+              child: TextFormField(
+                enabled: false,
+                style: TextStyle(fontSize: 20.0),
+                decoration: InputDecoration(
+                  hintStyle: TextStyle(
+                      color: image == null
+                          ? Colors.white
+                          : Colors.red),
+                  hintText: image == null
+                      ? "Select Image"
+                      : "Image Selected",
+                  border: InputBorder.none,
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () async {
+                _startPickingImage(context);
+              },
+              child: Container(
+                color: Colors.grey[400],
+                child: image == null
+                    ? Container(
+                  height: 200,
+                  width: MediaQuery.of(context).size.width - 100,
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(
+                          Icons.add,
+                          size: 100,
+                          color: Colors.white,
+                        ),
+                        Text(
+                          'Add Image',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontFamily: "Gilroy",
+                              fontWeight: FontWeight.w600),
+                        )
+                        //SizedBox(height:height*0.06),
+                      ]),
+                )
+                    : Image(
+                    height: 200,
+                    width: MediaQuery.of(context).size.width - 60,
+                    fit: BoxFit.cover,
+                    image: FileImage(image)),
+              ),
+            ),
+            SizedBox(height: 20.0,),
+            RaisedButton(
+              onPressed: ()async{
+                if(image==null){
+
+                  Scaffold.of(context).showSnackBar(
+                    SnackBar(content: Text("No Image Selected"),backgroundColor: primaryColour,),
+                  );
+                }else{
+                  await uploadFile(image);
+                  await FirebaseFirestore.instance.collection("Stories").doc(widget.storyId).update({'storyImageURL' : '$uploadedFileURL'})
+                      .then((value){
+                    Navigator.pop(context);
+
+                  });
+                }
+              },
+              child: Text('Upload Image'),
+            )
+          ],
+        ),
+      ));
   }
 }

@@ -31,7 +31,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        resizeToAvoidBottomPadding: false,
         body: Container(
           height: size.height,
           width: size.width,

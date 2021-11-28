@@ -1,12 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:tellmeastorymom/constants/constant.dart';
 import 'package:tellmeastorymom/constants/screenSize.dart';
 import 'package:tellmeastorymom/providers/commentData.dart';
+import 'package:tellmeastorymom/screens/Home.dart';
 
 class CommentList extends StatefulWidget {
   final bool hasRating;
   final List<CommentData> commentList;
+
 
   const CommentList({Key key, this.hasRating, this.commentList}) : super(key: key);
 
@@ -41,7 +45,39 @@ class _CommentListState extends State<CommentList> {
                   userName: widget.commentList[index].commentBy,
                   comment: widget.commentList[index].content,
                   commentDate: widget.commentList[index].postedOn,
-                  rating: widget.commentList[index].ratingStars);
+                  rating: widget.commentList[index].ratingStars,
+
+                  deleteCommentCallback: ()async{
+                  String commentID = widget.commentList[index].id;
+                  String storyID = widget.commentList[index].storyId;
+
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Confirm Comment Delete?'),
+                          actions: <Widget>[
+                            FlatButton(
+                              child: Text("Yes"),
+                              onPressed: () async{
+                                FirebaseFirestore.instance.collection('Stories').doc(storyID)..collection('Comments').doc(commentID).delete().then((value) {
+                                  Navigator.of(context).pop();
+                                });
+                              },
+                            ),
+                            FlatButton(
+                              child: Text("No"),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            )
+                          ],
+                        );
+                      }
+                  );
+                  }
+              );
+
             },
             itemCount: widget.commentList.length,
           );
@@ -49,12 +85,13 @@ class _CommentListState extends State<CommentList> {
 }
 
 Widget userRatings(
-    {double rating = 1,
-    bool hasRating = false,
-    String userName = 'UserName',
-    String commentDate = '00-00-00',
-    String commentTitle = 'Title',
-    String comment =
+    { double rating = 1,
+      bool hasRating = false,
+      String userName = 'UserName',
+      String commentDate = '00-00-00',
+      String commentTitle = 'Title',
+      final deleteCommentCallback,
+      String comment =
         'Long comment text Long comment text Long comment text Long comment text Long comment text Long comment text Long comment text Long comment text Long comment text Long comment text Long comment text Long comment text Long comment text Long comment text Long comment text Long comment text Long comment text '}) {
   return Padding(
     padding: EdgeInsets.symmetric(
@@ -102,6 +139,12 @@ Widget userRatings(
             fontFamily: 'Poppins-Light',
           ),
         ),
+        userAdmin == true ?
+        IconButton(
+            icon: Icon(MaterialCommunityIcons.delete, color: Colors.black,size: 20.0,),
+            onPressed: deleteCommentCallback,
+        ) :
+        SizedBox(),
       ],
     ),
   );

@@ -29,7 +29,6 @@ class _CategoryStoryListState extends State<CategoryStoryList> {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        resizeToAvoidBottomPadding: false,
         appBar: appBarOverall(
             heading: widget.heading,
             onPressed: () {

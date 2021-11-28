@@ -61,7 +61,7 @@ class DatabaseService {
     final data = await categoriesRef.get();
     var docs = data.docs;
     for (var doc in docs) {
-      categories.add(doc.data()['categoryName']);
+      categories.add(doc.get('categoryName'));
     }
     return categories;
   }

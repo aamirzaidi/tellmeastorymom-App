@@ -35,7 +35,6 @@ class _SplashScreenState extends State<SplashScreen> {
       child: Scaffold(
         backgroundColor: Color(0xFFFFFFFF),
         resizeToAvoidBottomInset: false,
-        resizeToAvoidBottomPadding: false,
         body: Container(
           height: size.height,
           width: size.width,

@@ -49,13 +49,14 @@ class ListBuilder extends StatelessWidget {
                 physics: physicsForApp,
                 itemCount: storyList.length,
                 itemBuilder: (context, index) {
+                  print('working here');
                   return HomeScreenCardView(
                     boxHeight: 250 * ScreenSize.heightMultiplyingFactor,
                     insideHeight: 180 * ScreenSize.heightMultiplyingFactor,
                     insideWidth: 345 * ScreenSize.widthMultiplyingFactor,
                     storyList: [storyList[index]],
-                    isInterview: true,
-                    isDiary: this.isDiary,
+//                    isInterview: true,
+//                    isDiary: this.isDiary,
                   );
                 },
               ),

@@ -60,13 +60,10 @@ class _AboutUsState extends State<AboutUs> {
 
 class AboutUsData extends StatelessWidget {
   final List<String> names = [
-    "Darshil Chheda",
-    "Subrat Singhal",
-    "Ashish Kumar",
     "Mohd Aamir",
-    "Spandan Joshi",
-    "Anshul Sharma",
-    "Ridhi Jain"
+    "Ridhi Jain",
+    "Darshil Chheda",
+    "Ashish Kumar",
   ];
 
   @override
@@ -80,17 +77,6 @@ class AboutUsData extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            // SizedBox(
-            //   height: 450 * ScreenSize.heightMultiplyingFactor,
-            // ),
-           /* Text(
-              "\nAbout the App: \n",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 16 * ScreenSize.heightMultiplyingFactor,
-                fontFamily: 'Poppins-SemiBold',
-              ),
-            ),*/
             Text(
               "\nHello, welcome to Tellmeastorymom. \n\nI'm Sweta, founder of Tellmeastorymom. Currently, I am living in Singapore with my Husband and a cute little daughter."
               "I am an IT professional and currently working in Singapore. My roots are from a small city in Madhya Pradesh (India). \n\nTellmeastorymom is my passion. I started it as my hobby in December 2016, but now it’s like my second child."
