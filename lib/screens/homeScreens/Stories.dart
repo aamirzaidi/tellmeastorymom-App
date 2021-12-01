@@ -235,7 +235,12 @@ class _StoriesState extends State<Stories> {
                     latestStories.add(StoryData.fromSnapshot(result));
                   });
 
-                   latestStories.sort();
+                  try{
+                    latestStories.sort();
+                  }catch(e){
+                    print('There has been some in error in ordering Latest Stories');
+                  }
+
                    latestStories.removeRange(10, latestStories.length);
 
                   return HomeScreenCardView(
