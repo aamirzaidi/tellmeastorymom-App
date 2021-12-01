@@ -6,7 +6,7 @@ import 'package:tellmeastorymom/providers/storyData.dart';
 import 'package:tellmeastorymom/providers/userData.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import 'Readings.dart';
+import 'storypage.dart';
 
 class CommonCardViewScreen extends StatefulWidget {
   final List<StoryData> storyList;
@@ -114,7 +114,7 @@ class _CommonCardViewScreenState extends State<CommonCardViewScreen> {
                     }
                     // setState(() {});
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => Readings(
+                      builder: (context) => StoryPage(
                         hideSpeechButton: widget.hideSpeechButton,
                         story: widget.storyList[index],
                       ),

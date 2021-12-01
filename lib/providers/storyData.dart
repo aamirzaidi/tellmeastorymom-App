@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class StoryData implements Comparable<StoryData> {
-
   String id;
   String storyImageURL;
   String storyImageURL2;

@@ -7,6 +7,8 @@ import 'package:tellmeastorymom/providers/storyData.dart';
 import 'package:expand_widget/expand_widget.dart';
 import 'package:tellmeastorymom/screens/AddStoryScreens/editScreen.dart';
 
+import 'delete_category_page.dart';
+
 class AdminArea extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -26,13 +28,78 @@ class AdminArea extends StatelessWidget {
               bottomLeft: Radius.circular(25.0),
             ),
           ),
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(100),
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 5.0),
+              child: Column(
+                children: [
+                  OutlinedButton(
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(Colors.white)),
+                    child: Text('Add Another Category', style: TextStyle(color: Colors.lightBlue),),
+                    onPressed: (){
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (BuildContext context) {
+                            final myController = TextEditingController();
+                            return Container(
+                              height: double.infinity,
+                              width: double.infinity,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(20.0),
+                                    child: TextField(
+                                      controller: myController,),
+                                  ),
+                                  Text('Add New Category', style: TextStyle(fontSize: 17.0,),),
+                                  SizedBox(height: 10.0,),
+                                  OutlinedButton(onPressed: () async{
+                                    print(myController.text);
+                                    if(myController.text.length < 4){
+                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                          content: Text('Length should be atleast 4 charcaters long'),
+                                      ));
+                                      print('Length should be atleast 4 charcaters long');
+                                    }else{
+                                      DatabaseService databaseService =
+                                      new DatabaseService();
+                                      bool success = await databaseService.addCategory(myController.text);
+                                      if(success){
+                                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                            content: Text('Category Added')));
+                                      }else{
+                                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                            content: Text('Error in adding! Try again')));
+                                      }
+                                    }
+                                    Navigator.pop(context);
+                                  }, child: Text('Add category'))
+                                ],
+                              ),
+                            );
+                          });
+                    },
+                  ),
+                  OutlinedButton(
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(Colors.white)),
+                      onPressed: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => deleteCategoryPage()));
+                      },
+                      child: Text('Delete Category', style: TextStyle(color: Colors.lightBlue)))
+                ],
+              ),
+            ),
+          ),
         ),
         body: PendingStoriesPage());
   }
 }
 
 class PendingStoriesPage extends StatefulWidget {
-
   @override
   _PendingStoriesPageState createState() => _PendingStoriesPageState();
 }
@@ -91,7 +158,7 @@ class _PendingStoriesPageState extends State<PendingStoriesPage> {
                       child: Text('Something Wrong'),
                     );
                   }
-                  print(snapshot.data.docs.length);
+
                   if(snapshot.data.docs.length==0){
                     return Center(child: Text('No Stories Uploaded',style: TextStyle(fontSize: 30.0,color: primaryColour),),);
                   }
@@ -108,20 +175,11 @@ class _PendingStoriesPageState extends State<PendingStoriesPage> {
                     arrowColor: primaryColour,
 
                     approveCallBack: ()async{
-                      final chosenCategories = snapshot.data.docs[index].get('related');
-
-                      StoryData storyData = new StoryData(
-                        title: snapshot.data.docs[index].get('title'),
-                        posted: snapshot.data.docs[index].get('posted'),
-                        content: snapshot.data.docs[index].get('content'),
-                        related: chosenCategories.cast<String>(),
-                        author: snapshot.data.docs[index].get('author'),
-                        storyImageURL: snapshot.data.docs[index].get('storyImageURL'),
-                      );
+                      StoryData storyData = StoryData.fromSnapshot(snapshot.data.docs[index]);
 
                       DatabaseService databaseService =
                       new DatabaseService();
-                      await databaseService.uploadStory(storyData);
+                        await databaseService.uploadStory(storyData);
 
                       var documentID = snapshot.data.docs[index].id;
                       FirebaseFirestore.instance.collection('PendingStories').doc(documentID).delete();

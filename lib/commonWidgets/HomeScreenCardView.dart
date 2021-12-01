@@ -4,7 +4,7 @@ import 'package:tellmeastorymom/constants/constant.dart';
 import 'package:tellmeastorymom/constants/screenSize.dart';
 import 'package:tellmeastorymom/providers/storyData.dart';
 import 'package:tellmeastorymom/providers/userData.dart';
-import 'Readings.dart';
+import 'storypage.dart';
 
 class HomeScreenCardView extends StatefulWidget {
   final double boxHeight;
@@ -65,7 +65,7 @@ class _HomeScreenCardViewState extends State<HomeScreenCardView> {
                     }
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) =>
-                          Readings(
+                          StoryPage(
                               story: widget.storyList[index],
                             )
                     ));

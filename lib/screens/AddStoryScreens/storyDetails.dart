@@ -10,7 +10,8 @@ import 'package:tellmeastorymom/screens/Home.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class StoryDetails extends StatefulWidget {
-  StoryDetails({Key key}) : super(key: key);
+  final storyContent;
+  StoryDetails({this.storyContent});
 
   @override
   _StoryDetailsState createState() => _StoryDetailsState();
@@ -216,13 +217,26 @@ class _StoryDetailsState extends State<StoryDetails> {
                             await uploadFile(image);
                           }
 
-                          print(uploadedFileURL);
+                          //Getting dates in right format
+                          final dayInt = DateTime.now().day;
+                          String day = '';
+                          if(dayInt < 10){
+                            day += "0$dayInt";
+                          }
+
+                          final monthInt = DateTime.now().day;
+                          String month = '';
+                          if(monthInt < 10){
+                            month += "0$monthInt";
+                          }
+
+                          final year = DateTime.now().year;
 
                           StoryData storyData = new StoryData(
                             title: title.text,
                             posted:
-                                'Posted on ${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}',
-                            content: doc,
+                                'Posted on $day-$month-$year',
+                            content: widget.storyContent,
                             related: chosenCategories,
                             author: author,
                             storyImageURL: uploadedFileURL ?? 'https://scontent.fdel5-1.fna.fbcdn.net/v/t1.0-9/22279431_1412480745495450_4240890917957906218_n.png?_nc_cat=107&ccb=2&_nc_sid=09cbfe&_nc_ohc=V8e_4warmcIAX-AoAOn&_nc_ht=scontent.fdel5-1.fna&oh=41ea8be45d3daeaa0d3a279eb1c272d1&oe=5FFB7E1F',

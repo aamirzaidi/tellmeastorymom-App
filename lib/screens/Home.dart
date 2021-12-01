@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:tellmeastorymom/commonWidgets/SearchScreen.dart';
+import 'package:tellmeastorymom/commonWidgets/storypage.dart';
 import 'package:tellmeastorymom/constants/constant.dart';
 import 'package:tellmeastorymom/drawerScreens/Mompreneur.dart';
+import 'package:tellmeastorymom/providers/firebase_dynamic_link.dart';
 import 'package:tellmeastorymom/providers/userData.dart';
 import 'package:tellmeastorymom/constants/screenSize.dart';
 import 'package:tellmeastorymom/screens/AddStoryScreens/textScreen.dart';
@@ -40,6 +43,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   @override
   void initState(){
     super.initState();
+
+    FirebaseDynamicLinkService.initDynamicLink(context);
+
     tabController = TabController(length: 3, vsync: this);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       setState(() {
@@ -86,6 +92,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     });
     getColor();
   }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(

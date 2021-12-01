@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,20 +21,21 @@ import 'package:tellmeastorymom/screens/Home.dart';
 import 'StoriesScreen.dart';
 import 'commentList.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:tellmeastorymom/providers/firebase_dynamic_link.dart';
 
 FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 
-class Readings extends StatefulWidget {
+class StoryPage extends StatefulWidget {
   final StoryData story;
   final hideSpeechButton;
 
-  const Readings({Key key, this.story,this.hideSpeechButton = false}) : super(key: key);
+  const StoryPage({Key key, this.story,this.hideSpeechButton = false}) : super(key: key);
 
   @override
-  _ReadingsState createState() => _ReadingsState();
+  _StoryPageState createState() => _StoryPageState();
 }
 
-class _ReadingsState extends State<Readings> {
+class _StoryPageState extends State<StoryPage> {
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   List<CommentData> commentList = [];
   List<String> recents = [];
@@ -517,13 +519,11 @@ class _StoryHeaderState extends State<StoryHeader> {
   void initState() {
     super.initState();
     userID = UserData.getUserId();
-    // flutterTts.setCancelHandler(() {
-    //   flutterTts.stop();
-    // });
   }
 
   @override
   Widget build(BuildContext context) {
+
     speak() async {
       print(widget.story.content);
       await flutterTts.setLanguage("en-US");
@@ -531,12 +531,13 @@ class _StoryHeaderState extends State<StoryHeader> {
       await flutterTts.setSpeechRate(0.85);
       await flutterTts.speak(
           widget.story.content.replaceAll(RegExp(r'\\n'), "\n"));
-
     }
 
     double overallRating = 0;
     int commentCount = 0;
+
     return WillPopScope(
+      // ignore: missing_return
       onWillPop: () async {
         await flutterTts.stop();
         Navigator.of(context).pop();
@@ -727,12 +728,12 @@ class _StoryHeaderState extends State<StoryHeader> {
                   ),
                   Spacer(),
                   GestureDetector(
-                    onTap: () {
+                    onTap: () async {
+                      String generatedDeepLink = await FirebaseDynamicLinkService.createDynamicLink(false, widget.story);
+                      print(generatedDeepLink);
                       print(widget.story.title);
-                      print(widget.story.content
-                          .replaceAll(RegExp(r'\\n'), "\n"));
                       Share.share(
-                          '${widget.story.title}\n${widget.story.content.replaceAll(RegExp(r'\\n'), "\n")}\n\nCheckout this amazing story on app n listen via reader ! \n https://play.google.com/store/apps/details?id=com.tellmeastorymom.tellmeastorymom');
+                          '${widget.story.title}\n\n$generatedDeepLink\n\nCheckout this amazing story on app and listen via reader ! \n');
                     },
                     child: Container(
                       padding: EdgeInsets.symmetric(

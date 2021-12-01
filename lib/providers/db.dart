@@ -11,6 +11,17 @@ class DatabaseService {
   final CollectionReference pendingStoriesRef =
       FirebaseFirestore.instance.collection('PendingStories');
 
+  Future<bool> deleteCategory(id) async{
+    try{
+      await categoriesRef.doc(id).delete();
+      return true;
+    }catch(e){
+      print('$e : Error Catch');
+      return false;
+    }
+  }
+
+
   Future<DocumentReference> uploadPendingSory(StoryData storyData) async {
     DocumentReference documentReference;
     try {
@@ -34,10 +45,20 @@ class DatabaseService {
       documentReference = await storiesRef.add({
         'author': storyData.author,
         'content': storyData.content,
+        'content2': storyData.content2 ?? "",
+        'content3': storyData.content3 ?? "",
+        'content4': storyData.content4 ?? "",
+        'content5': storyData.content5 ?? "",
+        'content6': storyData.content6 ?? "",
         'posted': storyData.posted,
         'related': storyData.related,
         'title': storyData.title,
-        'storyImageURL' : storyData.storyImageURL,
+        'storyImageURL' : storyData.storyImageURL ?? null,
+        'storyImageURL2' : storyData.storyImageURL2 ?? null,
+        'storyImageURL3' : storyData.storyImageURL3 ?? null,
+        'storyImageURL4' : storyData.storyImageURL4 ?? null,
+        'storyImageURL5' : storyData.storyImageURL5 ?? null,
+        'storyImageURL6' : storyData.storyImageURL6 ?? null,
         'isLatest': true,
       });
     } on FirebaseException catch (e) {
@@ -64,5 +85,20 @@ class DatabaseService {
       categories.add(doc.get('categoryName'));
     }
     return categories;
+  }
+
+  Future<bool> addCategory(String categoryName) async {
+    try{
+      await categoriesRef.add(
+        {
+          'categoryName' : categoryName,
+          'categoryStories' : [],
+        });
+
+      return true;
+    }catch(e){
+      print('$e : Error Catch');
+      return false;
+    }
   }
 }

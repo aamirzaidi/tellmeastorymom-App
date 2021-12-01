@@ -4,6 +4,7 @@ import 'package:tellmeastorymom/constants/constant.dart';
 import 'package:tellmeastorymom/screens/AddStoryScreens/storyDetails.dart';
 import 'package:zefyrka/zefyrka.dart';
 import 'package:quill_format/quill_format.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TextScreen extends StatefulWidget {
   TextScreen({Key key}) : super(key: key);
@@ -61,32 +62,19 @@ class _TextScreenState extends State<TextScreen> {
                         color: Colors.white,
                       ),
                       Spacer(),
-                      // OutlinedButton(
-                      //   style: ElevatedButton.styleFrom(primary: Colors.white),
-                      //   onPressed: () async {
-                      //     if (controller.document.length < 2) {
-                      //       await showDialog(
-                      //         context: context,
-                      //         barrierDismissible: true,
-                      //         builder: (context) {
-                      //           return AlertDialog(
-                      //             title: Text('Empty story'),
-                      //             content: Text(
-                      //                 'The story cannot be completely empty'),
-                      //           );
-                      //         },
-                      //       );
-                      //     } else{
-                      //       _saveDocument(context);
-                      //     }
-                      //   },
-                      //   child: Text(
-                      //     'Save draft',
-                      //     style: TextStyle(
-                      //       fontFamily: 'Poppins-Light',
-                      //     ),
-                      //   ),
-                      // ),
+                      OutlinedButton(
+                        style: ElevatedButton.styleFrom(primary: Colors.white),
+                        onPressed: () async {
+                          launch(
+                              "https://www.tellmeastorymom.com/addMultipleStory");
+                        },
+                        child: Text(
+                          'Add Story With Multiple Images',
+                          style: TextStyle(
+                            fontFamily: 'Poppins-Light',
+                          ),
+                        ),
+                      ),
                       SizedBox(
                         width: 20,
                       ),
@@ -110,7 +98,7 @@ class _TextScreenState extends State<TextScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => StoryDetails(),
+                                builder: (context) => StoryDetails(storyContent: controller.document.toPlainText()),
                               ),
                             );
                           }
@@ -156,14 +144,6 @@ class _TextScreenState extends State<TextScreen> {
       resizeToAvoidBottomInset: true,
     );
   }
-
-  // Future<void> _saveDocument(BuildContext context) async {
-  //   final contents = controller.document.toPlainText();
-  //   final file = File(Directory.systemTemp.path + "/story.json");
-  //   await file.writeAsString(contents).then((_) {
-  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Saved.")));
-  //   });
-  // }
 }
 
 

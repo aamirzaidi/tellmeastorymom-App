@@ -32,7 +32,7 @@ class _MyStoriesState extends State<MyStories> {
               myStories.clear();
               if (snapshot.hasData){
                 snapshot.data.docs.forEach((result) {
-                  if(result.get("author") == UserData.getUserName()){
+                  if(result.get("author") == "By ${UserData.getUserName()}"){
                     myStories.add(StoryData.fromSnapshot(result));
                   }
                 });
