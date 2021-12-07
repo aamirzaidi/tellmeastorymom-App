@@ -1,12 +1,16 @@
+import 'package:http/http.dart' as http;
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:share/share.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:tellmeastorymom/commonWidgets/commentList.dart';
 import 'package:tellmeastorymom/constants/constant.dart';
 import 'package:tellmeastorymom/constants/screenSize.dart';
+import 'package:tellmeastorymom/providers/firebase_dynamic_link.dart';
 import 'package:tellmeastorymom/providers/storyData.dart';
 import 'package:tellmeastorymom/providers/commentData.dart';
 import 'package:tellmeastorymom/providers/userData.dart';
@@ -406,9 +410,22 @@ class _InterviewStoryHeaderState extends State<InterviewStoryHeader> {
                 ),
                 Spacer(),
                 GestureDetector(
-                  onTap: () {
-                    Share.share(
-                        '${widget.story.title}\n${widget.story.content.replaceAll(RegExp(r'\\n'), "\n")}\nCheckout this amazing story on app n listen via reader ! \n https://play.google.com/store/apps/details?id=com.tellmeastorymom.tellmeastorymom');
+                  onTap: () async{
+                    String generatedDeepLink = await FirebaseDynamicLinkService.createDynamicLink(false, widget.story);
+                    final urlImage = '${widget.story.storyImageURL}';
+                    final url =  Uri.parse(urlImage);
+                    final response = await http.get(url);
+                    final bytes = response.bodyBytes;
+
+                    final temp = await getTemporaryDirectory();
+                    final path = '${temp.path}/image.jpg';
+                    File(path).writeAsBytesSync(bytes);
+
+                    Share.shareFiles(
+                        [path],
+                        text: '${widget.story.title}\n\n$generatedDeepLink\n\nCheckout this amazing story on app and listen via reader !'
+
+                    );
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(

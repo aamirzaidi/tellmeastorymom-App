@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:http/http.dart' as http;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +8,8 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:share/share.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:tellmeastorymom/commonWidgets/HomeScreenCardView.dart';
 import 'package:tellmeastorymom/commonWidgets/rowForViewAll.dart';
 import 'package:tellmeastorymom/constants/constant.dart';
@@ -519,6 +520,7 @@ class _StoryHeaderState extends State<StoryHeader> {
   void initState() {
     super.initState();
     userID = UserData.getUserId();
+
   }
 
   @override
@@ -528,7 +530,7 @@ class _StoryHeaderState extends State<StoryHeader> {
       print(widget.story.content);
       await flutterTts.setLanguage("en-US");
       await flutterTts.setPitch(1.4);
-      await flutterTts.setSpeechRate(0.85);
+      await flutterTts.setSpeechRate(0.35);
       await flutterTts.speak(
           widget.story.content.replaceAll(RegExp(r'\\n'), "\n"));
     }
@@ -730,10 +732,20 @@ class _StoryHeaderState extends State<StoryHeader> {
                   GestureDetector(
                     onTap: () async {
                       String generatedDeepLink = await FirebaseDynamicLinkService.createDynamicLink(false, widget.story);
-                      print(generatedDeepLink);
-                      print(widget.story.title);
-                      Share.share(
-                          '${widget.story.title}\n\n$generatedDeepLink\n\nCheckout this amazing story on app and listen via reader ! \n');
+                      final urlImage = '${widget.story.storyImageURL}';
+                      final url =  Uri.parse(urlImage);
+                      final response = await http.get(url);
+                      final bytes = response.bodyBytes;
+
+                      final temp = await getTemporaryDirectory();
+                      final path = '${temp.path}/image.jpg';
+                      File(path).writeAsBytesSync(bytes);
+
+                      Share.shareFiles(
+                        [path],
+                         text: '${widget.story.title}\n\n$generatedDeepLink\n\nCheckout this amazing story on app and listen via reader !'
+
+                      );
                     },
                     child: Container(
                       padding: EdgeInsets.symmetric(
