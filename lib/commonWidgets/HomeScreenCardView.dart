@@ -83,7 +83,7 @@ class _HomeScreenCardViewState extends State<HomeScreenCardView> {
                               height: widget.insideHeight,
                               width: widget.insideWidth,
                               decoration: BoxDecoration(
-                                color: Colors.deepOrange,
+                                color: Colors.white70,
                                 borderRadius: BorderRadius.circular(25.0),
                                 boxShadow: <BoxShadow>[
                                   BoxShadow(

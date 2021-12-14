@@ -13,6 +13,7 @@ class MyStories extends StatefulWidget {
 
 class _MyStoriesState extends State<MyStories> {
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(

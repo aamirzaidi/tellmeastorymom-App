@@ -4,8 +4,6 @@ import 'package:tellmeastorymom/constants/constant.dart';
 import 'package:tellmeastorymom/constants/screenSize.dart';
 import 'package:tellmeastorymom/providers/storyData.dart';
 import 'package:tellmeastorymom/providers/userData.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-
 import 'storypage.dart';
 
 class CommonCardViewScreen extends StatefulWidget {

@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tellmeastorymom/constants/screenSize.dart';
@@ -15,7 +14,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 3), () async {
+    Timer(Duration(seconds: 2), () async {
       ScreenSize(MediaQuery.of(context).size.width,
           MediaQuery.of(context).size.height);
       Navigator.of(context).pushReplacement(
@@ -45,7 +44,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 width: size.width,
                 child: Center(
                    child: Image(
-                     image: AssetImage("assets/images/SmallLogo.jpg"),
+                     image: AssetImage("assets/images/SmallLogo.png"),
                      fit: BoxFit.scaleDown,
                    ),
                 ),

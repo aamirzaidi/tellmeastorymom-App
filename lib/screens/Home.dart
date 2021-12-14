@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:tellmeastorymom/commonWidgets/SearchScreen.dart';
-import 'package:tellmeastorymom/commonWidgets/storypage.dart';
 import 'package:tellmeastorymom/constants/constant.dart';
 import 'package:tellmeastorymom/drawerScreens/Mompreneur.dart';
 import 'package:tellmeastorymom/providers/firebase_dynamic_link.dart';
@@ -19,7 +17,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 SharedPreferences preferences;
 bool userAdmin = false;
-int noOfDays;
 
 class Home extends StatefulWidget {
   @override
@@ -32,7 +29,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   bool isLoading = false;
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 
-  Future getColor()async{
+  Future getColor() async{
     preferences = await SharedPreferences.getInstance();
     int idx = preferences.getInt('color');
     primaryColour = getColorIndex(idx);
@@ -51,6 +48,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       setState(() {
         isLoading = true;
       });
+
       await FirebaseFirestore.instance
           .collection('Users')
           .doc(FirebaseAuth.instance.currentUser.uid)
@@ -65,9 +63,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           );
         }
       });
+
       var firebaseUser = await FirebaseFirestore.instance
           .collection('Users')
           .doc(FirebaseAuth.instance.currentUser.uid).get();
+
       try{
         if(firebaseUser['role'] == 'admin'){
           setState(() {
@@ -75,21 +75,16 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             print('User is Admin');
           });
         }
-
-        FirebaseFirestore.instance.collection('sortBy').get().then((value) {
-          noOfDays = value.docs[0].get('days');
-          print('no of days = $noOfDays');
-        });
-
       }catch(e){
         print('User Not Admin');
         userAdmin = false;
-        noOfDays = 10;
       }
+
       setState(() {
         isLoading = false;
       });
     });
+
     getColor();
   }
 

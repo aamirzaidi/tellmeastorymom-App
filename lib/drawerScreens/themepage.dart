@@ -10,7 +10,7 @@ class ChangeTheme extends StatefulWidget {
 
 class _ChangeThemeState extends State<ChangeTheme> {
 
-  Future setColor(int idx)async{
+  Future setColor(int idx) async{
     await preferences.setInt('color', idx);
   }
 

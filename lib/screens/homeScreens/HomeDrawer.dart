@@ -81,7 +81,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                               1.0 * ScreenSize.heightMultiplyingFactor,
                             ),
                             Text(
-                              UserData.getUserName(),
+                              UserData.getUserName() ?? 'Error',
                               style: TextStyle(
                                   fontFamily: 'Poppins-Regular',
                                   fontSize: 17.0 *
@@ -94,7 +94,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                               1.0 * ScreenSize.heightMultiplyingFactor,
                             ),
                             Text(
-                              UserData.getUserEmail(),
+                              UserData.getUserEmail() ?? '',
                               style: TextStyle(
                                 fontFamily: 'Poppins-Regular',
                                 fontSize: 12.0 *

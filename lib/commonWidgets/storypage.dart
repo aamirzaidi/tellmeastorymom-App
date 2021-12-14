@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,6 +24,7 @@ import 'StoriesScreen.dart';
 import 'commentList.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:tellmeastorymom/providers/firebase_dynamic_link.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 
@@ -44,15 +46,50 @@ class _StoryPageState extends State<StoryPage> {
   List<bool> isSelected;
   int fontSize = 17;
 
-  void toggleDarkMode(){
+  var storyPrimaryColor = Colors.white;
+  var storySecondaryColor = Colors.black;
+
+  Future isDarkMode() async{
+    await firebaseFirestore.collection('Users')
+        .doc(FirebaseAuth.instance.currentUser.uid).get().then((snapshot) {
+          try{
+            bool isDark = snapshot.get('isDark');
+            if(isDark == true){
+              toggleDarkMode(false, true);
+            }
+          }catch(e){
+            print(e);
+          }
+        });
+  }
+
+  void toggleDarkMode(bool value, bool firstTime) async{
+    //value = true -> Dark Mode previously enabled
+    
     Color tempColor = storyPrimaryColor;
     storyPrimaryColor = storySecondaryColor;
     storySecondaryColor = tempColor;
+
+    if(firstTime == false){
+      if(value == false){
+        //Enable dark mode
+        await firebaseFirestore.collection('Users')
+            .doc(FirebaseAuth.instance.currentUser.uid)
+            .update({'isDark': true})
+            .then((value) => print("Updated"))
+            .catchError((error) => print("Failed to update : $error"));
+
+      }else{
+        //Disable dark Mode
+        await firebaseFirestore.collection('Users')
+            .doc(FirebaseAuth.instance.currentUser.uid)
+            .update({'isDark': true})
+            .then((value) => print("Updated"))
+            .catchError((error) => print("Failed to update : $error"));
+      }
+    }
     setState(() {});
   }
-
-  var storyPrimaryColor = Colors.white;
-  var storySecondaryColor = Colors.black;
 
   int getFontSize(int index){
     if(index==0){
@@ -110,12 +147,13 @@ class _StoryPageState extends State<StoryPage> {
   
   @override
   void initState() {
-    // TODO: implement initState
     isSelected = [
       false,
       true,
       false,
     ];
+
+    isDarkMode();
     super.initState();
   }
 
@@ -167,7 +205,7 @@ class _StoryPageState extends State<StoryPage> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       GestureDetector(
-                        onTap: toggleDarkMode,
+                        onTap: () => toggleDarkMode(storyPrimaryColor != Colors.white, false),
                         child: CircleAvatar(
                           backgroundColor: storySecondaryColor,
                           child:
