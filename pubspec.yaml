@@ -4,7 +4,7 @@ description: A new Flutter project.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 2.2.0+10
+version: 2.3.0+11
 
 module:
   androidX: true
