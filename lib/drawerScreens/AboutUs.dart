@@ -36,7 +36,7 @@ class _AboutUsState extends State<AboutUs> {
                       ),
                       elevation: 3.0 * ScreenSize.heightMultiplyingFactor,
                       child: Image.asset(
-                        "assets/images/SmallLogo.jpg",
+                        "assets/images/SmallLogo.png",
                         height: 248 * ScreenSize.heightMultiplyingFactor,
                         width: 206 * ScreenSize.widthMultiplyingFactor,
                       ),

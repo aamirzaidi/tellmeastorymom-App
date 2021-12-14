@@ -56,7 +56,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                     children: [
                       CircleAvatar(
                         backgroundColor: Colors.amber,
-                        backgroundImage: AssetImage('assets/images/pp.jpg',),
+                        backgroundImage: AssetImage('assets/images/peachu.jpg',),
                         radius: 30.0,
                       ),
                       SizedBox(

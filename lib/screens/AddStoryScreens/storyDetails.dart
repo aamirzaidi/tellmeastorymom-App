@@ -222,12 +222,16 @@ class _StoryDetailsState extends State<StoryDetails> {
                           String day = '';
                           if(dayInt < 10){
                             day += "0$dayInt";
+                          }else{
+                            day += '$dayInt';
                           }
 
-                          final monthInt = DateTime.now().day;
+                          final monthInt = DateTime.now().month;
                           String month = '';
                           if(monthInt < 10){
                             month += "0$monthInt";
+                          }else{
+                            month += '$monthInt';
                           }
 
                           final year = DateTime.now().year;
@@ -238,7 +242,7 @@ class _StoryDetailsState extends State<StoryDetails> {
                                 'Posted on $day-$month-$year',
                             content: widget.storyContent,
                             related: chosenCategories,
-                            author: author,
+                            author: "By $author",
                             storyImageURL: uploadedFileURL ?? 'https://scontent.fdel5-1.fna.fbcdn.net/v/t1.0-9/22279431_1412480745495450_4240890917957906218_n.png?_nc_cat=107&ccb=2&_nc_sid=09cbfe&_nc_ohc=V8e_4warmcIAX-AoAOn&_nc_ht=scontent.fdel5-1.fna&oh=41ea8be45d3daeaa0d3a279eb1c272d1&oe=5FFB7E1F',
                           );
 
@@ -253,7 +257,6 @@ class _StoryDetailsState extends State<StoryDetails> {
                           }catch(e){
                             globalKey.currentState.showSnackBar(SnackBar(content: Text('Some Error Occured')));
                           }
-
 
                           Navigator.pushAndRemoveUntil(
                               context,
@@ -305,6 +308,12 @@ class _StoryDetailsState extends State<StoryDetails> {
                   ),
                 ),
               ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+                'Story will be uploaded once approved by the user!'
             ),
             SizedBox(
               height: 40,

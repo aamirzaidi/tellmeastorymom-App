@@ -782,8 +782,7 @@ class _StoryHeaderState extends State<StoryHeader> {
                       Share.shareFiles(
                         [path],
                          subject: '${widget.story.title}',
-                         text: '${widget.story.title}'+"\n"'${widget.story.content.replaceAll(RegExp(r'\\n'), "\n").substring(0,100)}\n\n$generatedDeepLink\n\nCheckout this amazing story on app and listen via reader !'
-
+                         text: "${widget.story.title}\n${widget.story.content.substring(0,100).replaceAll(RegExp(r'\\n'), "\n")}...\n\n$generatedDeepLink\nCheckout this amazing story on app and listen via reader !"
                       );
                     },
                     child: Container(

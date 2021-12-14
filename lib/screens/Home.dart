@@ -99,7 +99,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             "Tellmeastorymom",
             style: TextStyle(
               fontFamily: 'Poppins-SemiBold',
-              fontSize: 19.5 * ScreenSize.widthMultiplyingFactor,
+              fontSize: 21.0 * ScreenSize.widthMultiplyingFactor,
             ),
           ),
           shape: RoundedRectangleBorder(
