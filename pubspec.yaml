@@ -4,7 +4,7 @@ description: A new Flutter project.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 2.3.0+11
+version: 2.5.0+13
 
 module:
   androidX: true
@@ -16,6 +16,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+  clipboard: ^0.1.3
   cupertino_icons: ^0.1.3
   tel_input: ^0.2.2
   flutter_icons: ^1.1.0

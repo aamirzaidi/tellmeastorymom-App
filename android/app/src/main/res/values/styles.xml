@@ -16,4 +16,5 @@
     <style name="NormalTheme" parent="@android:style/Theme.Black.NoTitleBar">
         <item name="android:windowBackground">@android:color/white</item>
     </style>
+    <string name="facebook_app_id">605881990525236</string>
 </resources>

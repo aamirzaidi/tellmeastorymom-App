@@ -24,7 +24,7 @@ import 'StoriesScreen.dart';
 import 'commentList.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:tellmeastorymom/providers/firebase_dynamic_link.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:clipboard/clipboard.dart';
 
 FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 
@@ -143,6 +143,10 @@ class _StoryPageState extends State<StoryPage> {
         ),
       );
     }
+  }
+
+  void copyContent(String storyUrl, String content){
+    FlutterClipboard.copy(storyUrl + "\n" + content).then(( value ) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Copied Content! Paste it anywhere!"))),);
   }
   
   @override
@@ -308,7 +312,7 @@ class _StoryPageState extends State<StoryPage> {
             getStoryImages(widget.story.storyImageURL6),
             getStoryContent(widget.story.content6),
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
                   width: 120.0 * ScreenSize.widthMultiplyingFactor,
@@ -398,6 +402,20 @@ class _StoryPageState extends State<StoryPage> {
                         },
                       ),
                     ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right : 10.0),
+                  child: IconButton(
+                    icon : Icon(Icons.copy_outlined),
+                    color: Colors.blue,
+                    iconSize: 25 * ScreenSize.widthMultiplyingFactor,
+                    onPressed: () async{
+                      String generatedDeepLink = await FirebaseDynamicLinkService.createDynamicLink(false, widget.story);
+                      final storyContent = widget.story.content.substring(0,300).replaceAll(RegExp(r'\\n'), "\n") + ". . ." + "\n\nRead complete story from the link";
+
+                      copyContent(generatedDeepLink, storyContent);
+                    }
                   ),
                 ),
               ],
