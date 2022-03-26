@@ -33,7 +33,8 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
           color: Colors.white,
           child: Form(
             key: _formKey,
-            autovalidate: _autoValidate,
+            //TODO: _autoValidate removed
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,

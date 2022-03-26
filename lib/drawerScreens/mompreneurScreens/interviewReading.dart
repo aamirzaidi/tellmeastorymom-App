@@ -577,7 +577,8 @@ class _UserReviewState extends State<UserReview> {
           ),
           Form(
             key: _formKey,
-            autovalidate: _autoValidate,
+            //TODO: _autoValidate removed
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             child: Container(
               margin: EdgeInsets.symmetric(
                 vertical: 15.0 * ScreenSize.widthMultiplyingFactor,

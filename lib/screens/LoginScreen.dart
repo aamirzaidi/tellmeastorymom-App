@@ -201,7 +201,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       Form(
                         key: _formKey,
-                        autovalidate: _autoValidate,
+                        //TODO: _autoValidate removed
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         child: Column(
                           children: <Widget>[
                             Container(

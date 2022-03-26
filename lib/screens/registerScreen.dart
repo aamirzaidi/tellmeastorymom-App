@@ -65,7 +65,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 Form(
                   key: _formkey,
-                  autovalidate: _autoValidate,
+                  //TODO: _autoValidate removed
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   child: Column(
                     children: [
                       Padding(
