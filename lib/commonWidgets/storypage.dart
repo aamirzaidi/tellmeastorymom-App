@@ -29,6 +29,7 @@ import 'package:clipboard/clipboard.dart';
 FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 
 class StoryPage extends StatefulWidget {
+  
   final StoryData story;
   final hideSpeechButton;
 
